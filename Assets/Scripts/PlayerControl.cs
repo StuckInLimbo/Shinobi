@@ -4,10 +4,13 @@ using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerControl : MonoBehaviour {
-    [SerializeField] private float m_MaxSpeed = 15f;		//Max Running Speed
+	[SerializeField] private float m_MinSpeed = -20f;		//Min Running Speed
+	[SerializeField] private float m_Speed = 0f;			//Current Running Speed
+	[SerializeField] private float m_MaxSpeed = 20f;		//Max Running Speed
     [SerializeField] private float m_JumpPower = 500f;		//Jump Height
-    [SerializeField] private bool m_CanDoubleJump = true;	//Is player able to double jump?
-    [SerializeField] private bool m_CanSlide = true;		//Is player able to slide?
+    [SerializeField] private bool m_CanDoubleJump = true;   //Is player able to double jump?
+	[SerializeField] private bool m_CanSlide = true;        //Is player able to slide?
+	[SerializeField] private bool m_CanDash = true;			//Is player able to dash?
 	[SerializeField] private bool m_AirControl = false;     // Whether or not a player can steer while jumping;
 	[SerializeField] private LayerMask m_WhatIsGround;      // A mask determining what is ground to the character
 
@@ -21,25 +24,6 @@ public class PlayerControl : MonoBehaviour {
 	void Awake() {
 		m_GroundCheck = transform.Find("GroundCheck");
 		m_Rigidbody2D = GetComponent<Rigidbody2D>();
-	}
-
-	void Move(float moveSpeed, bool jump) {
-		m_Rigidbody2D.velocity = new Vector2(moveSpeed * m_MaxSpeed, m_Rigidbody2D.velocity.y);
-		
-		if (jump) {
-			if (m_Grounded) {
-				m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, 0f);
-				m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpPower));
-				m_CanDoubleJump = true;
-			}
-			else {
-				if (m_CanDoubleJump) {
-					m_CanDoubleJump = false;
-					m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, 0f);
-					m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpPower));
-				}
-			}
-		}
 	}
 
 	void Update() {
@@ -56,7 +40,26 @@ public class PlayerControl : MonoBehaviour {
 			}
 		}
 		m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
-		float speed = CrossPlatformInputManager.GetAxis("Horizontal");
-		Move(speed, m_Jump);
+		//GetAxis("Horizontal") ranges from -1.0f to 1.0f, that is too little
+		m_Speed = (CrossPlatformInputManager.GetAxis("Horizontal") * 10) + (10f * Time.deltaTime);
+
+		//m_Speed = Mathf.Clamp(m_Speed, m_MinSpeed, m_MaxSpeed); //clamp between -20 and 20
+
+		m_Rigidbody2D.velocity = new Vector2(m_Speed, m_Rigidbody2D.velocity.y);
+
+		if (m_Jump) {
+			if (m_Grounded) {
+				m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, 0f);
+				m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpPower));
+				m_CanDoubleJump = true;
+			}
+			else {
+				if (m_CanDoubleJump) {
+					m_CanDoubleJump = false;
+					m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, 0f);
+					m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpPower));
+				}
+			}
+		}
 	}
 }
