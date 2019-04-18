@@ -1,18 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour {
-	[SerializeField] private int m_Score;
-	[SerializeField] private int m_Health;
-	[SerializeField] private GameObject m_ScoreObject;
+	[SerializeField] private int score; //Player's current score
+	[SerializeField] private int health = 3; //Player's health (WIP)
+	[SerializeField] private GameObject scoreObject; //GUI object
 
 	public void AddScore(int value) {
-		m_Score += value;
+		score += value;
 	}
 
 	private void Update() {
-		m_ScoreObject.GetComponent<Text>().text = string.Format("Score: {0}", m_Score);
+		scoreObject.GetComponent<Text>().text = string.Format("Score: {0}", score);
 	}
 }

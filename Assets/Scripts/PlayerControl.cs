@@ -1,100 +1,98 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
+﻿using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))] //rbody2d is required for many functions
 public class PlayerControl : MonoBehaviour {
-	[SerializeField] private float m_MinSpeed = -20f;       //Min Running Speed
-	[SerializeField] private float m_Speed = 0f;            //Current Running Speed
-	[SerializeField] private float m_MaxSpeed = 20f;        //Max Running Speed
-	[SerializeField] private float m_Acceleration = 200f;    //Max Running Speed
-	[SerializeField] private float m_JumpPower = 500f;      //Jump Height
-	[SerializeField] private float m_DashDistance = 100f;      //Dash Length
-	[SerializeField] private bool m_CanDoubleJump = true;   //Is player able to double jump?
-	[SerializeField] private bool m_CanSlide = true;        //Is player able to slide?
-	[SerializeField] private bool m_CanDash = true;         //Is player able to dash?
-	[SerializeField] private bool m_AirControl = false;     // Whether or not a player can steer while jumping;
-	[SerializeField] private LayerMask m_WhatIsGround;      // A mask determining what is ground to the character
+	[SerializeField] private float minSpeed = -20f;             //Min Running Speed
+	[SerializeField] private float curSpeed = 0f;               //Current Running Speed
+	[SerializeField] private float maxSpeed = 20f;              //Max Running Speed
+	[SerializeField] private float accelerationRate = 200f;     //Max Running Speed
+	[SerializeField] private float jumpForce = 500f;            //Jump Height
+	[SerializeField] private float dashDistance = 100f;         //Dash Length
+	[SerializeField] private bool canDoubleJump = true;         //Is player able to double jump?
+	[SerializeField] private bool canSlide = true;              //Is player able to slide?
+	[SerializeField] private bool canDash = true;               //Is player able to dash?
+	[SerializeField] private LayerMask groundLayerMask;         // A mask determining what is ground to the character
 
-	private bool m_Grounded;            // Whether or not the player is grounded.
-	//private Animator m_Anim;
-	private Rigidbody2D m_Rigidbody;
-	private bool m_Jump = false;
-	private bool m_Dash = false;
-	//private bool m_Slide = false;
-	private double m_DashCooldown = 1.5;
-	private double m_TimeStamp;
-	private bool m_LookingRight = true;
+	private bool isGrounded;            //Whether or not the player is grounded.
+	private Rigidbody2D rBody;			//Rigidbody2D component
+	private bool jump = false;			//Jump button(s) pressed?
+	private bool dash = false;			//Dash button(s) pressed?
+	private bool slide = false;			//Slide button(s) pressed?
+	private double dashCooldown = 1.5;	//Dash cooldown in seconds
+	private double timpStamp;			//Timestamp for dash cooldown
+	private bool lookingRight = true;	//Last direction faced
 
 	void Awake() {
-		m_Rigidbody = GetComponent<Rigidbody2D>();
-
+		rBody = GetComponent<Rigidbody2D>(); //Get Rigidbody2D component from Character
 	}
 
 	void Update() {
-		m_Grounded = false;
-
+		//Checks a .01 unit area beneath the player for objects with the Ground layer
 		if (Physics2D.OverlapArea(new Vector2(transform.position.x - 0.5f, transform.position.y - 0.5f),
-			new Vector2(transform.position.x + 0.5f, transform.position.y - 0.51f), m_WhatIsGround)) {
-			m_Grounded = true;
-			m_CanDoubleJump = true;
-			m_CanDash = true;
+			new Vector2(transform.position.x + 0.5f, transform.position.y - 0.51f), groundLayerMask)) {
+			isGrounded = true;
+			canDoubleJump = true;
+			canDash = true;
 		}
 		else {
-			m_Grounded = false;
+			isGrounded = false;
 		}
 
-		m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
-		m_Dash = Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.E);
-
-		//m_Rigidbody.velocity = new Vector2(m_Speed, m_Rigidbody.velocity.y);
+		//Gets input from player
+		jump = Input.GetButtonDown("Jump"); //Space or W
+		dash = Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.E);
+		
+		//Sets the last look location, used for dashing in the same direction you are moving
 		if (Input.GetKeyDown(KeyCode.A)) {
-			m_LookingRight = false;
+			lookingRight = false;
 		}
 		else if (Input.GetKeyDown(KeyCode.D)) {
-			m_LookingRight = true;
+			lookingRight = true;
 		}
-		m_Speed = Mathf.Lerp(m_Rigidbody.velocity.x, (Input.GetAxisRaw("Horizontal") * 50) * m_Acceleration * Time.deltaTime, Time.deltaTime * 2);
-		m_Speed = Mathf.Clamp(m_Speed, m_MinSpeed, m_MaxSpeed);
-		m_Rigidbody.velocity = (new Vector2(m_Speed, m_Rigidbody.velocity.y));
+		//Speed = linear interp from current velocity to max speed @ acceleration rate, over the duration of deltatime * 2
+		curSpeed = Mathf.Lerp(rBody.velocity.x, (Input.GetAxisRaw("Horizontal") * 50) * accelerationRate * Time.deltaTime, Time.deltaTime * 2);
+		curSpeed = Mathf.Clamp(curSpeed, minSpeed, maxSpeed); //Clamps speed to prevent shooting off into space
+		rBody.velocity = (new Vector2(curSpeed, rBody.velocity.y)); //Sets velocity to new velocity, AddForce wasn't working as intended.
 
-		if (m_Jump) {
-			if (m_Grounded) {
-				m_Rigidbody.velocity = new Vector2(m_Rigidbody.velocity.x, 0f);
-				m_Rigidbody.AddForce(new Vector2(0f, m_JumpPower));
-				m_CanDoubleJump = true;
+		if (jump) { //If player has pushed jump
+			if (isGrounded) { //And we are on the ground
+				rBody.velocity = new Vector2(rBody.velocity.x, 0f); //Cancel any downward/upward movement
+				rBody.AddForce(new Vector2(0f, jumpForce)); //Add jumpForce to current velocity
 			}
-			else {
-				if (m_CanDoubleJump) {
-					m_CanDoubleJump = false;
-					m_Rigidbody.velocity = new Vector2(m_Rigidbody.velocity.x, 0f);
-					m_Rigidbody.AddForce(new Vector2(0f, m_JumpPower));
+			else { //We aren't on the ground
+				if (canDoubleJump) { //We can jump a second time
+					canDoubleJump = false; //Make sure we can't jump again
+					rBody.velocity = new Vector2(rBody.velocity.x, 0f); //Cancel any downward/upward movement
+					rBody.AddForce(new Vector2(0f, jumpForce)); //Add jumpForce to current velocity
 				}
 			}
 		}
 
-		if (m_Dash && m_CanDash && m_TimeStamp <= Time.time) { //fix 
+		if (dash && canDash && timpStamp <= Time.time) { //If we pressed dash and we can dash and it's not on cooldown
 
-			m_TimeStamp = Time.time + m_DashCooldown;
+			timpStamp = Time.time + dashCooldown; //Set cooldown timestamp to current time
 
-			Vector2 pointToCastFrom = new Vector2(transform.position.x + ((m_LookingRight == true) ? 0.5f : -0.5f), transform.position.y);
-			Vector2 direction = (m_LookingRight ? Vector2.right : Vector2.left);
+			//Setup point to cast from and what direction we are going to RayCast from
+			Vector2 pointToCastFrom = new Vector2(transform.position.x + ((lookingRight == true) ? 0.5f : -0.5f), transform.position.y);
+			Vector2 direction = (lookingRight ? Vector2.right : Vector2.left);
+			//Create RayCast2D at position and angle from before, at dashDistance range
+			RaycastHit2D hit = Physics2D.Raycast(pointToCastFrom, direction, dashDistance);
 
-			RaycastHit2D hit = Physics2D.Raycast(pointToCastFrom, direction, m_DashDistance);
-
-			if(hit.collider == false) { //we didn't hit anything
-				Vector2 newPos = new Vector2(transform.position.x + (m_LookingRight ? m_DashDistance : -m_DashDistance), transform.position.y);
+			if (hit.collider == false) { //we didn't hit anything
+				//New position is 5 units in front/behind of us
+				Vector2 newPos = new Vector2(transform.position.x + (lookingRight ? dashDistance : -dashDistance), transform.position.y);
 				Debug.Log("Dashing from " + transform.position + " to " + newPos);
-				transform.position = newPos;
+				transform.position = newPos; //Set new position
 			}
-			else if(hit.collider) { //hit something
+			else if (hit.collider) { //hit something
 				float newDist = 0;
+				//New position is newDist units in front/behind of us
 				newDist = Mathf.Abs(hit.point.x - pointToCastFrom.x);
-				Vector2 newPos = new Vector2(transform.position.x + (m_LookingRight ? newDist : -newDist), transform.position.y);
+				Vector2 newPos = new Vector2(transform.position.x + (lookingRight ? newDist : -newDist), transform.position.y);
 				Debug.Log("Dashing from " + transform.position + " to " + newPos);
-				transform.position = newPos;
+				transform.position = newPos; //Set new position
 			}
-			m_CanDash = false;
+			canDash = false;
 		}
 	}
 }

@@ -1,17 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CollectableItem : MonoBehaviour {
-	[SerializeField] private int m_Value;
+	[SerializeField] private int value; //Value of CollectableItem
 
-	private Inventory inventory;
+	private Inventory inventory; //Player's inventory component
 
 	private void OnTriggerEnter2D(Collider2D other) {
 		if (other.tag == "Player") {
-			inventory = other.GetComponent<Inventory>();
-			inventory.AddScore(m_Value);
-			Destroy(gameObject);
+			inventory = other.GetComponent<Inventory>(); //Gets comp from Player
+			inventory.AddScore(value);
+			Destroy(gameObject); //Removes self from the plane of existence
 		}
 	}
 }
