@@ -103,6 +103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelToMoveTo: {fileID: 0}
+  mc: {fileID: 0}
 --- !u!212 &7653908932533669808
 SpriteRenderer:
   m_ObjectHideFlags: 0
