@@ -142,19 +142,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96d786a48eed2354fa9623026d089f2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MinSpeed: -15
-  m_Speed: 0
-  m_MaxSpeed: 15
-  m_Acceleration: 70
-  m_JumpPower: 500
-  m_DashDistance: 5
-  m_CanDoubleJump: 1
-  m_CanSlide: 1
-  m_CanDash: 1
-  m_AirControl: 1
-  m_WhatIsGround:
+  minSpeed: -15
+  curSpeed: 0
+  maxSpeed: 15
+  accelerationRate: 200
+  jumpForce: 500
+  dashDistance: 5
+  canDoubleJump: 1
+  canSlide: 1
+  canDash: 1
+  groundLayerMask:
     serializedVersion: 2
     m_Bits: 256
+  isGrounded: 0
 --- !u!114 &83943825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,6 +167,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d4ab51e74ac10844a35791990647f66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Score: 0
-  m_Health: 3
-  m_ScoreObject: {fileID: 0}
+  score: 0
+  health: 3
+  scoreObject: {fileID: 0}

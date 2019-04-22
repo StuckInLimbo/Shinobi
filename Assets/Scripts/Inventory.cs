@@ -10,7 +10,11 @@ public class Inventory : MonoBehaviour {
 		score += value;
 	}
 
+	private void Start() {
+		DontDestroyOnLoad(gameObject);
+	}
+
 	private void Update() {
-		scoreObject.GetComponent<Text>().text = string.Format("Score: {0}", score);
+		scoreObject.GetComponent<Text>().text = string.Format("Score: {0:D0}", score);
 	}
 }

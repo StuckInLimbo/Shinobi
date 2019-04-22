@@ -2,18 +2,18 @@
 
 [RequireComponent(typeof(Rigidbody2D))] //rbody2d is required for many functions
 public class PlayerControl : MonoBehaviour {
-	[SerializeField] private float minSpeed = -20f;             //Min Running Speed
+	[SerializeField] private float minSpeed = -15f;             //Min Running Speed
 	[SerializeField] private float curSpeed = 0f;               //Current Running Speed
-	[SerializeField] private float maxSpeed = 20f;              //Max Running Speed
+	[SerializeField] private float maxSpeed = 15f;              //Max Running Speed
 	[SerializeField] private float accelerationRate = 200f;     //Max Running Speed
 	[SerializeField] private float jumpForce = 500f;            //Jump Height
-	[SerializeField] private float dashDistance = 100f;         //Dash Length
+	[SerializeField] private float dashDistance = 5f;			//Dash Length
 	[SerializeField] private bool canDoubleJump = true;         //Is player able to double jump?
 	[SerializeField] private bool canSlide = true;              //Is player able to slide?
 	[SerializeField] private bool canDash = true;               //Is player able to dash?
 	[SerializeField] private LayerMask groundLayerMask;         // A mask determining what is ground to the character
 
-	private bool isGrounded;            //Whether or not the player is grounded.
+	[SerializeField] private bool isGrounded;            //Whether or not the player is grounded.
 	private Rigidbody2D rBody;			//Rigidbody2D component
 	private bool jump = false;			//Jump button(s) pressed?
 	private bool dash = false;			//Dash button(s) pressed?
