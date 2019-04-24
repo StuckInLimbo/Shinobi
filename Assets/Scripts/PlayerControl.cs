@@ -11,7 +11,7 @@ public class PlayerControl : MonoBehaviour {
 	[SerializeField] private bool canDoubleJump = true;         //Is player able to double jump?
 	[SerializeField] private bool canSlide = true;              //Is player able to slide?
 	[SerializeField] private bool canDash = true;               //Is player able to dash?
-	[SerializeField] private LayerMask groundLayerMask;         // A mask determining what is ground to the character
+	[SerializeField] private LayerMask groundLayerMask = 256;   // A mask determining what is ground to the character
 
 	[SerializeField] private bool isGrounded;            //Whether or not the player is grounded.
 	private Rigidbody2D rBody;			//Rigidbody2D component
@@ -24,12 +24,13 @@ public class PlayerControl : MonoBehaviour {
 
 	void Awake() {
 		rBody = GetComponent<Rigidbody2D>(); //Get Rigidbody2D component from Character
+		Debug.Log(groundLayerMask.value);
 	}
 
 	void Update() {
 		//Checks a .01 unit area beneath the player for objects with the Ground layer
-		if (Physics2D.OverlapArea(new Vector2(transform.position.x - 0.5f, transform.position.y - 0.5f),
-			new Vector2(transform.position.x + 0.5f, transform.position.y - 0.51f), groundLayerMask)) {
+		if (Physics2D.OverlapArea(new Vector2(transform.position.x - 0.50f, transform.position.y - 0.50f),
+			new Vector2(transform.position.x + 0.50f, transform.position.y - 0.52f), groundLayerMask)) {
 			isGrounded = true;
 			canDoubleJump = true;
 			canDash = true;
