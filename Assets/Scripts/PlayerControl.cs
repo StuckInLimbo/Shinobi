@@ -2,18 +2,18 @@
 
 [RequireComponent(typeof(Rigidbody2D))] //rbody2d is required for many functions
 public class PlayerControl : MonoBehaviour {
-	[SerializeField] private float minSpeed = -15f;             //Min Running Speed
-	[SerializeField] private float curSpeed = 0f;               //Current Running Speed
-	[SerializeField] private float maxSpeed = 15f;              //Max Running Speed
-	[SerializeField] private float accelerationRate = 200f;     //Max Running Speed
-	[SerializeField] private float jumpForce = 500f;            //Jump Height
-	[SerializeField] private float dashDistance = 5f;			//Dash Length
-	[SerializeField] private bool canDoubleJump = true;         //Is player able to double jump?
-	[SerializeField] private bool canSlide = true;              //Is player able to slide?
-	[SerializeField] private bool canDash = true;               //Is player able to dash?
-	[SerializeField] private LayerMask groundLayerMask = 256;   // A mask determining what is ground to the character
+	[SerializeField] private float minSpeed = -15f;         //Min Running Speed
+	[SerializeField] private float curSpeed = 0f;           //Current Running Speed
+	[SerializeField] private float maxSpeed = 15f;          //Max Running Speed
+	[SerializeField] private float accelerationRate = 200f;	//Max Running Speed
+	[SerializeField] private float jumpForce = 500f;        //Jump Height
+	[SerializeField] private float dashDistance = 5f;		//Dash Length
+	[SerializeField] private bool canDoubleJump = true;     //Is player able to double jump?
+	[SerializeField] private bool isGrounded = false;		//Whether or not the player is grounded.
+	[SerializeField] private bool canSlide = true;          //Is player able to slide?
+	[SerializeField] private bool canDash = true;           //Is player able to dash?
+	[SerializeField] private LayerMask layerMask = 256;		// A mask to determine ground to the Controller
 
-	[SerializeField] private bool isGrounded;            //Whether or not the player is grounded.
 	private Rigidbody2D rBody;			//Rigidbody2D component
 	private bool jump = false;			//Jump button(s) pressed?
 	private bool dash = false;			//Dash button(s) pressed?
@@ -24,13 +24,12 @@ public class PlayerControl : MonoBehaviour {
 
 	void Awake() {
 		rBody = GetComponent<Rigidbody2D>(); //Get Rigidbody2D component from Character
-		Debug.Log(groundLayerMask.value);
 	}
 
 	void Update() {
 		//Checks a .01 unit area beneath the player for objects with the Ground layer
 		if (Physics2D.OverlapArea(new Vector2(transform.position.x - 0.50f, transform.position.y - 0.50f),
-			new Vector2(transform.position.x + 0.50f, transform.position.y - 0.52f), groundLayerMask)) {
+			new Vector2(transform.position.x + 0.50f, transform.position.y - 0.51f), layerMask)) {
 			isGrounded = true;
 			canDoubleJump = true;
 			canDash = true;
@@ -52,7 +51,7 @@ public class PlayerControl : MonoBehaviour {
 		}
 		//Speed = linear interp from current velocity to max speed @ acceleration rate, over the duration of deltatime * 2
 		curSpeed = Mathf.Lerp(rBody.velocity.x, (Input.GetAxisRaw("Horizontal") * 50) * accelerationRate * Time.deltaTime, Time.deltaTime * 2);
-		curSpeed = Mathf.Clamp(curSpeed, minSpeed, maxSpeed); //Clamps speed to prevent shooting off into space
+		curSpeed = Mathf.Clamp(curSpeed, minSpeed, maxSpeed); //Clamps velocity to prevent shooting off into space like Team Rocket
 		rBody.velocity = (new Vector2(curSpeed, rBody.velocity.y)); //Sets velocity to new velocity, AddForce wasn't working as intended.
 
 		if (jump) { //If player has pushed jump
@@ -74,7 +73,7 @@ public class PlayerControl : MonoBehaviour {
 			timpStamp = Time.time + dashCooldown; //Set cooldown timestamp to current time
 
 			//Setup point to cast from and what direction we are going to RayCast from
-			Vector2 pointToCastFrom = new Vector2(transform.position.x + ((lookingRight == true) ? 0.5f : -0.5f), transform.position.y);
+			Vector2 pointToCastFrom = new Vector2(transform.position.x + (lookingRight ? 0.5f : -0.5f), transform.position.y);
 			Vector2 direction = (lookingRight ? Vector2.right : Vector2.left);
 			//Create RayCast2D at position and angle from before, at dashDistance range
 			RaycastHit2D hit = Physics2D.Raycast(pointToCastFrom, direction, dashDistance);

@@ -19,7 +19,7 @@ public class MoveLevel : MonoBehaviour {
 	private void OnTriggerEnter2D(Collider2D collision) {
 		if(collision.tag == "Player") {
 			GameObject player = collision.gameObject;
-			player.GetComponent<Inventory>().AddScore(Mathf.RoundToInt(time.time) * -2); 
+			player.GetComponent<Inventory>().AddScore(Mathf.RoundToInt(time.timeOnLevel) * -2); 
 			player.transform.position = levelToMoveTo.position;
 			mc.transform.position = cameraSpot.position;
 		}
