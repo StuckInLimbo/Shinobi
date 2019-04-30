@@ -34,7 +34,8 @@ public class SceneSwitcher : MonoBehaviour {
 			GameObject scoreObj = GameObject.Find("ScoreObject");
 			GameObject timer = GameObject.Find("TimerObject");
 			scoreObj.GetComponent<ScoreKeeper>().Set(collision.GetComponent<Inventory>().GetScore(), timer.GetComponent<Timer>().GetTotalTime());
-			LoadNextScene();
+			//LoadNextScene(); //Use when loading the next actual level
+			LoadGameOver();
 		}
 	}
 }

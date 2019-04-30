@@ -9,6 +9,7 @@ public class EnemyProjectile : MonoBehaviour {
 			//do nothing
 		}
 		else if (other.tag == "Player") {
+			other.GetComponent<Inventory>().AddScore(-50);
 			Destroy(gameObject);
 			Debug.Log("Hit player!");
 		}

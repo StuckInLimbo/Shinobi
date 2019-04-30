@@ -18,7 +18,7 @@ public class PlayerControl : MonoBehaviour {
 	private bool jump = false;			//Jump button(s) pressed?
 	private bool dash = false;			//Dash button(s) pressed?
 	private bool slide = false;			//Slide button(s) pressed?
-	private double dashCooldown = 1.5;	//Dash cooldown in seconds
+	private double dashCooldown = 1.25;	//Dash cooldown in seconds
 	private double timeStamp;			//Timestamp for dash cooldown
 	private bool lookingRight = true;	//Last direction faced
 
@@ -27,6 +27,9 @@ public class PlayerControl : MonoBehaviour {
 	}
 
 	void Update() {
+		if (Input.GetKeyDown(KeyCode.Escape))
+			Application.Quit();
+
 		//Checks a .01 unit area beneath the player for objects with the Ground layer
 		if (Physics2D.OverlapArea(new Vector2(transform.position.x - 0.50f, transform.position.y - 0.50f),
 			new Vector2(transform.position.x + 0.50f, transform.position.y - 0.51f), layerMask)) {
@@ -43,14 +46,14 @@ public class PlayerControl : MonoBehaviour {
 		dash = Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.E);
 		
 		//Sets the last look location, used for dashing in the same direction you are moving
-		if (Input.GetKeyDown(KeyCode.A)) {
+		if (Input.GetAxis("Horizontal") < 0) {
 			lookingRight = false;
 		}
-		else if (Input.GetKeyDown(KeyCode.D)) {
+		else if (Input.GetAxis("Horizontal") > 0) {
 			lookingRight = true;
 		}
-		//Speed = linear interp from current velocity to max speed @ acceleration rate, over the duration of deltatime * 2
-		curSpeed = Mathf.Lerp(rBody.velocity.x, (Input.GetAxisRaw("Horizontal") * 50) * accelerationRate * Time.deltaTime, Time.deltaTime * 2);
+		//Speed = linear interp from current velocity to max speed @ acceleration rate, over the duration of deltatime
+		curSpeed = Mathf.Lerp(rBody.velocity.x, Input.GetAxis("Horizontal") * accelerationRate, 0.15f);
 		curSpeed = Mathf.Clamp(curSpeed, minSpeed, maxSpeed); //Clamps velocity to prevent shooting off into space like Team Rocket
 		rBody.velocity = (new Vector2(curSpeed, rBody.velocity.y)); //Sets velocity to new velocity, AddForce wasn't working as intended.
 
@@ -96,7 +99,7 @@ public class PlayerControl : MonoBehaviour {
 		}
 	}
 
-	private void OnLevelWasLoaded(int level) {
+	private void OnLevelWasLoaded(int level) { //deprecated
 		if(level < 2 ) {
 			//Add time to main timer counter
 			//Keep score

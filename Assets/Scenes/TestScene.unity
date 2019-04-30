@@ -15213,6 +15213,26 @@ PrefabInstance:
       propertyPath: scoreObject
       value: 
       objectReference: {fileID: 1639565920}
+    - target: {fileID: 755702654731935216, guid: 9d3f551e781a0d44aa411f4daadea2f4,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: 0cb77231a430b454fb792ff7ffcc3943, type: 2}
+    - target: {fileID: 755702654731935216, guid: 9d3f551e781a0d44aa411f4daadea2f4,
+        type: 3}
+      propertyPath: m_LinearDrag
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 755702654731935216, guid: 9d3f551e781a0d44aa411f4daadea2f4,
+        type: 3}
+      propertyPath: m_AngularDrag
+      value: 0.075
+      objectReference: {fileID: 0}
+    - target: {fileID: 755702654731935214, guid: 9d3f551e781a0d44aa411f4daadea2f4,
+        type: 3}
+      propertyPath: jumpForce
+      value: 500
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d3f551e781a0d44aa411f4daadea2f4, type: 3}
 --- !u!1001 &5407919481508302035

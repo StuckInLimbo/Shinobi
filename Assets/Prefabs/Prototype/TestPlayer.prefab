@@ -149,12 +149,12 @@ MonoBehaviour:
   jumpForce: 500
   dashDistance: 5
   canDoubleJump: 1
+  isGrounded: 0
   canSlide: 1
   canDash: 1
-  groundLayerMask:
+  layerMask:
     serializedVersion: 2
     m_Bits: 256
-  isGrounded: 0
 --- !u!114 &83943825
 MonoBehaviour:
   m_ObjectHideFlags: 0
