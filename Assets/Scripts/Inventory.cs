@@ -10,8 +10,13 @@ public class Inventory : MonoBehaviour {
 		score += value;
 	}
 
+	public int GetScore() {
+		return score;
+	}
+
 	private void Start() {
 		DontDestroyOnLoad(gameObject);
+		scoreObject = GameObject.Find("Canvas/ScoreText");
 	}
 
 	private void Update() {

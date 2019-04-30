@@ -7,19 +7,20 @@ public class MoveLevel : MonoBehaviour {
 	[SerializeField] Transform cameraSpot;
 	[SerializeField] Camera mc;
 
-	Timer time;
+	Timer timer;
 
 	private void Start() {
 		mc = Camera.main;
 		levelToMoveTo = transform.GetChild(0);
 		cameraSpot = transform.GetChild(1);
-		time = GameObject.Find("TimerObject").GetComponent<Timer>();
+		timer = GameObject.Find("TimerObject").GetComponent<Timer>();
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision) {
 		if(collision.tag == "Player") {
 			GameObject player = collision.gameObject;
-			player.GetComponent<Inventory>().AddScore(Mathf.RoundToInt(time.timeOnLevel) * -2); 
+			player.GetComponent<Inventory>().AddScore(Mathf.RoundToInt(timer.GetSplitTime()) * -2);
+			timer.ResetTime();
 			player.transform.position = levelToMoveTo.position;
 			mc.transform.position = cameraSpot.position;
 		}

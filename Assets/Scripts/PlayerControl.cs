@@ -19,7 +19,7 @@ public class PlayerControl : MonoBehaviour {
 	private bool dash = false;			//Dash button(s) pressed?
 	private bool slide = false;			//Slide button(s) pressed?
 	private double dashCooldown = 1.5;	//Dash cooldown in seconds
-	private double timpStamp;			//Timestamp for dash cooldown
+	private double timeStamp;			//Timestamp for dash cooldown
 	private bool lookingRight = true;	//Last direction faced
 
 	void Awake() {
@@ -68,9 +68,9 @@ public class PlayerControl : MonoBehaviour {
 			}
 		}
 
-		if (dash && canDash && timpStamp <= Time.time) { //If we pressed dash and we can dash and it's not on cooldown
+		if (dash && canDash && timeStamp <= Time.time) { //If we pressed dash and we can dash and it's not on cooldown
 
-			timpStamp = Time.time + dashCooldown; //Set cooldown timestamp to current time
+			timeStamp = Time.time + dashCooldown; //Set cooldown timestamp to current time
 
 			//Setup point to cast from and what direction we are going to RayCast from
 			Vector2 pointToCastFrom = new Vector2(transform.position.x + (lookingRight ? 0.5f : -0.5f), transform.position.y);
@@ -93,6 +93,18 @@ public class PlayerControl : MonoBehaviour {
 				transform.position = newPos; //Set new position
 			}
 			canDash = false;
+		}
+	}
+
+	private void OnLevelWasLoaded(int level) {
+		if(level < 2 ) {
+			//Add time to main timer counter
+			//Keep score
+		}
+		else {
+			//Move Score to object
+			//Destroy object to prevent scripting errors
+			Destroy(gameObject);
 		}
 	}
 }
