@@ -14,7 +14,8 @@ public class PlayerControl : MonoBehaviour {
 	[SerializeField] private bool canDash = true;           //Is player able to dash?
 	[SerializeField] private LayerMask layerMask = 256;		// A mask to determine ground to the Controller
 
-	private Rigidbody2D rBody;			//Rigidbody2D component
+	private Rigidbody2D rBody;          //Rigidbody2D component
+	private Animator anim;				//Animator component
 	private bool jump = false;			//Jump button(s) pressed?
 	private bool dash = false;			//Dash button(s) pressed?
 	private bool slide = false;			//Slide button(s) pressed?
@@ -24,6 +25,7 @@ public class PlayerControl : MonoBehaviour {
 
 	void Awake() {
 		rBody = GetComponent<Rigidbody2D>(); //Get Rigidbody2D component from Character
+		anim = GetComponent<Animator>(); //Get Animator component from Character
 	}
 
 	void Update() {
@@ -31,11 +33,12 @@ public class PlayerControl : MonoBehaviour {
 			Application.Quit();
 
 		//Checks a .01 unit area beneath the player for objects with the Ground layer
-		if (Physics2D.OverlapArea(new Vector2(transform.position.x - 0.50f, transform.position.y - 0.50f),
-			new Vector2(transform.position.x + 0.50f, transform.position.y - 0.51f), layerMask)) {
+		if (Physics2D.OverlapArea(new Vector2(transform.position.x - 0.55f, transform.position.y - 0.8f),
+			new Vector2(transform.position.x + 0.55f, transform.position.y - 0.81f), layerMask)) {
 			isGrounded = true;
 			canDoubleJump = true;
 			canDash = true;
+			anim.SetBool("Jumping", false);
 		}
 		else {
 			isGrounded = false;
@@ -46,27 +49,31 @@ public class PlayerControl : MonoBehaviour {
 		dash = Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.E);
 		
 		//Sets the last look location, used for dashing in the same direction you are moving
-		if (Input.GetAxis("Horizontal") < 0) {
-			lookingRight = false;
+		if (Input.GetAxis("Horizontal") < 0 && lookingRight) {
+			Flip();
 		}
-		else if (Input.GetAxis("Horizontal") > 0) {
-			lookingRight = true;
+		else if (Input.GetAxis("Horizontal") > 0 && !lookingRight) {
+			Flip();
 		}
+
 		//Speed = linear interp from current velocity to max speed @ acceleration rate, over the duration of deltatime
 		curSpeed = Mathf.Lerp(rBody.velocity.x, Input.GetAxis("Horizontal") * accelerationRate, 0.15f);
 		curSpeed = Mathf.Clamp(curSpeed, minSpeed, maxSpeed); //Clamps velocity to prevent shooting off into space like Team Rocket
+		anim.SetFloat("Speed", Mathf.Abs(curSpeed));
 		rBody.velocity = (new Vector2(curSpeed, rBody.velocity.y)); //Sets velocity to new velocity, AddForce wasn't working as intended.
 
 		if (jump) { //If player has pushed jump
 			if (isGrounded) { //And we are on the ground
 				rBody.velocity = new Vector2(rBody.velocity.x, 0f); //Cancel any downward/upward movement
 				rBody.AddForce(new Vector2(0f, jumpForce)); //Add jumpForce to current velocity
+				anim.SetBool("Jumping", true);
 			}
 			else { //We aren't on the ground
-				if (canDoubleJump) { //We can jump a second time
+				if (canDoubleJump) { //We can jump a second time	
 					canDoubleJump = false; //Make sure we can't jump again
 					rBody.velocity = new Vector2(rBody.velocity.x, 0f); //Cancel any downward/upward movement
 					rBody.AddForce(new Vector2(0f, jumpForce)); //Add jumpForce to current velocity
+					anim.SetBool("Jumping", true);
 				}
 			}
 		}
@@ -84,7 +91,7 @@ public class PlayerControl : MonoBehaviour {
 			if (hit.collider == false) { //we didn't hit anything
 				//New position is 5 units in front/behind of us
 				Vector2 newPos = new Vector2(transform.position.x + (lookingRight ? dashDistance : -dashDistance), transform.position.y);
-				Debug.Log("Dashing from " + transform.position + " to " + newPos);
+				//Debug.Log("Dashing from " + transform.position + " to " + newPos);
 				transform.position = newPos; //Set new position
 			}
 			else if (hit.collider) { //hit something
@@ -92,7 +99,7 @@ public class PlayerControl : MonoBehaviour {
 				//New position is newDist units in front/behind of us
 				newDist = Mathf.Abs(hit.point.x - pointToCastFrom.x);
 				Vector2 newPos = new Vector2(transform.position.x + (lookingRight ? newDist : -newDist), transform.position.y);
-				Debug.Log("Dashing from " + transform.position + " to " + newPos);
+				//Debug.Log("Dashing from " + transform.position + " to " + newPos);
 				transform.position = newPos; //Set new position
 			}
 			canDash = false;
@@ -109,5 +116,13 @@ public class PlayerControl : MonoBehaviour {
 			//Destroy object to prevent scripting errors
 			Destroy(gameObject);
 		}
+	}
+
+	private void Flip() {
+		lookingRight = !lookingRight;
+
+		Vector2 scale = transform.localScale;
+		scale.x *= -1;
+		transform.localScale = scale;
 	}
 }
