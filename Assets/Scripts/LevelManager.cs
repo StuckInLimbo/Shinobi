@@ -8,32 +8,24 @@ public class LevelManager : MonoBehaviour {
 	[SerializeField] private int maxLevels;
 
 	private void Awake() {
-		managers = FindObjectsOfType<EnemyManager>();
-		managers = SortArray(managers);
+		managers = FindObjectsOfType<EnemyManager>(); //apparently this shit is out of order, go figure.
+		managers = SortArray(managers); //lets sort this trash
 		
-		currentLevel = 0;
-		managers[currentLevel].SwitchTo();
-		maxLevels = managers.Length-1;
+		currentLevel = 0; //init
+		managers[currentLevel].SwitchTo(); //set current level as active
+		maxLevels = managers.Length-1; //make sure we have an upperbounds for the for loop
 	}
 
 	public void AdvanceLevel() {
-		int nextLevel = currentLevel + 1;
-
-		//Debug.Log("Is Level " + currentLevel + " active? " + managers[currentLevel].levelActive);
-		//Debug.Log("Is Level " + nextLevel + " active? " + managers[nextLevel].levelActive);
-
 		if (currentLevel < maxLevels) {
-			managers[currentLevel].SwitchFrom();
-			managers[nextLevel].SwitchTo();
-
-			//Debug.Log("Is Level " + currentLevel + " active? " + managers[currentLevel].levelActive);
-			//Debug.Log("Is Level " + nextLevel + " active? " + managers[nextLevel].levelActive);
+			managers[currentLevel].SwitchFrom(); //Current level inactive
+			managers[currentLevel+1].SwitchTo(); //Next level active
 		}
 		else if(currentLevel == maxLevels) {
-			managers[currentLevel].SwitchFrom();
+			managers[currentLevel].SwitchFrom(); //Set current level as inactive
 		}
 
-		currentLevel++;
+		currentLevel++; //Set the next level ID as current 
 	}
 
 	EnemyManager[] SortArray(EnemyManager[] arr) {

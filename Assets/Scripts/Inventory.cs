@@ -21,4 +21,8 @@ public class Inventory : MonoBehaviour {
 	public int GetScore() {
 		return score.GetScore();
 	}
+
+	public ScoreKeeper GetKeeper() {
+		return score;
+	}
 }

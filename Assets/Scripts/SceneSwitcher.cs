@@ -31,10 +31,11 @@ public class SceneSwitcher : MonoBehaviour {
 
 	private void OnTriggerEnter2D(Collider2D collision) {
 		if(collision.tag == "Player") {
-			GameObject scoreObj = GameObject.Find("ScoreObject");
-			GameObject timer = GameObject.Find("TimerObject");
-			scoreObj.GetComponent<ScoreKeeper>().Set(collision.GetComponent<Inventory>().GetScore(), timer.GetComponent<Timer>().GetTotalTime());
+			Timer timer = collision.GetComponent<Timer>(); //Get Timer object
+			Inventory inventory = collision.GetComponent<Inventory>();
+			inventory.GetKeeper().Set(inventory.GetScore(), timer.GetTotalTime());
 			//LoadNextScene(); //Use when loading the next actual level
+			Destroy(collision.gameObject);
 			LoadGameOver();
 		}
 	}

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7627882784249014529}
   - component: {fileID: 7627882784249014558}
   - component: {fileID: 7180819687698584929}
+  - component: {fileID: 6220963179184955550}
   m_Layer: 2
   m_Name: NinjaPlayer
   m_TagString: Player
@@ -119,7 +120,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.075
   m_GravityScale: 2
-  m_Material: {fileID: 6200000, guid: 0cb77231a430b454fb792ff7ffcc3943, type: 2}
+  m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -148,7 +149,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.19, y: 0.32}
+  m_Size: {x: 0.175, y: 0.32}
   m_EdgeRadius: 0
 --- !u!114 &7627882784249014558
 MonoBehaviour:
@@ -187,6 +188,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d4ab51e74ac10844a35791990647f66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  score: 0
-  health: 3
-  scoreObject: {fileID: 0}
+  score: {fileID: 0}
+--- !u!114 &6220963179184955550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7627882784249014559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c437b932ca98192449d528344541c10d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

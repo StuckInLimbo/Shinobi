@@ -108,18 +108,6 @@ public class PlayerControl : MonoBehaviour {
 		}
 	}
 
-	private void OnLevelWasLoaded(int level) { //deprecated
-		if(level < 2 ) {
-			//Add time to main timer counter
-			//Keep score
-		}
-		else {
-			//Move Score to object
-			//Destroy object to prevent scripting errors
-			Destroy(gameObject);
-		}
-	}
-
 	private void Flip() {
 		lookingRight = !lookingRight;
 
