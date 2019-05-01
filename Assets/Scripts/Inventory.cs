@@ -1,25 +1,24 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
+
 
 public class Inventory : MonoBehaviour {
-	[SerializeField] private int score; //Player's current score
-	[SerializeField] private int health = 3; //Player's health (WIP)
-	[SerializeField] private GameObject scoreObject; //GUI object
+	[SerializeField] private ScoreKeeper score;
+
+	private void Start() {
+		score = GameObject.Find("ScoreObject").GetComponent<ScoreKeeper>();
+	}
 
 	public void AddScore(int value) {
-		score += value;
+		score.Set(score.GetScore() + value);
+		score.UpdateScore();
+	}
+
+	public void SetScore(int value) {
+		score.Set(value);
+		score.UpdateScore();
 	}
 
 	public int GetScore() {
-		return score;
-	}
-
-	private void Start() {
-		DontDestroyOnLoad(gameObject);
-		scoreObject = GameObject.Find("Canvas/ScoreText");
-	}
-
-	private void Update() {
-		scoreObject.GetComponent<Text>().text = string.Format("Score: {0:D0}", score);
+		return score.GetScore();
 	}
 }

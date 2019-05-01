@@ -15,7 +15,8 @@ public class PlayerControl : MonoBehaviour {
 	[SerializeField] private LayerMask layerMask = 256;		// A mask to determine ground to the Controller
 
 	private Rigidbody2D rBody;          //Rigidbody2D component
-	private Animator anim;				//Animator component
+	private Animator anim;              //Animator component
+	private float movement = 0.0f;		//Horizontal axis pressed?
 	private bool jump = false;			//Jump button(s) pressed?
 	private bool dash = false;			//Dash button(s) pressed?
 	private bool slide = false;			//Slide button(s) pressed?
@@ -45,35 +46,36 @@ public class PlayerControl : MonoBehaviour {
 		}
 
 		//Gets input from player
-		jump = Input.GetButtonDown("Jump"); //Space or W
+		jump = Input.GetButtonDown("Jump");
 		dash = Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.E);
-		
+		movement = Input.GetAxis("Horizontal");
+
 		//Sets the last look location, used for dashing in the same direction you are moving
-		if (Input.GetAxis("Horizontal") < 0 && lookingRight) {
+		if (movement < 0 && lookingRight) {
 			Flip();
 		}
-		else if (Input.GetAxis("Horizontal") > 0 && !lookingRight) {
+		else if (movement > 0 && !lookingRight) {
 			Flip();
 		}
 
 		//Speed = linear interp from current velocity to max speed @ acceleration rate, over the duration of deltatime
-		curSpeed = Mathf.Lerp(rBody.velocity.x, Input.GetAxis("Horizontal") * accelerationRate, 0.15f);
+		curSpeed = Mathf.Lerp(rBody.velocity.x, movement * accelerationRate, 0.15f);
 		curSpeed = Mathf.Clamp(curSpeed, minSpeed, maxSpeed); //Clamps velocity to prevent shooting off into space like Team Rocket
 		anim.SetFloat("Speed", Mathf.Abs(curSpeed));
 		rBody.velocity = (new Vector2(curSpeed, rBody.velocity.y)); //Sets velocity to new velocity, AddForce wasn't working as intended.
 
 		if (jump) { //If player has pushed jump
 			if (isGrounded) { //And we are on the ground
+				anim.SetBool("Jumping", true);
 				rBody.velocity = new Vector2(rBody.velocity.x, 0f); //Cancel any downward/upward movement
 				rBody.AddForce(new Vector2(0f, jumpForce)); //Add jumpForce to current velocity
-				anim.SetBool("Jumping", true);
 			}
 			else { //We aren't on the ground
 				if (canDoubleJump) { //We can jump a second time	
+					anim.SetBool("Jumping", true);
 					canDoubleJump = false; //Make sure we can't jump again
 					rBody.velocity = new Vector2(rBody.velocity.x, 0f); //Cancel any downward/upward movement
 					rBody.AddForce(new Vector2(0f, jumpForce)); //Add jumpForce to current velocity
-					anim.SetBool("Jumping", true);
 				}
 			}
 		}
@@ -124,5 +126,21 @@ public class PlayerControl : MonoBehaviour {
 		Vector2 scale = transform.localScale;
 		scale.x *= -1;
 		transform.localScale = scale;
+	}
+
+	private void OnCollisionEnter2D(Collision2D collision) {
+		if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Wall")) {
+			anim.SetBool("Holding", true);
+
+			Flip();
+		}
+	}
+
+	private void OnCollisionExit2D(Collision2D collision) {
+		if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Wall")) {
+			anim.SetBool("Holding", false);
+
+			Flip();
+		}
 	}
 }
