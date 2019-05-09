@@ -2,7 +2,7 @@
 
 public class EnemyProjectile : MonoBehaviour {
 	[SerializeField] private int deduction = 50;
-	[SerializeField] private string[] list = { "Collectable", "Enemy", "Spawner"};
+	[SerializeField] private string[] tagList = { "Collectable", "Enemy", "Spawner"};
 
 	private void OnTriggerEnter2D(Collider2D other) {
 		
@@ -11,6 +11,7 @@ public class EnemyProjectile : MonoBehaviour {
 		}
 		else if (other.tag == "Player") {
 			other.GetComponent<Inventory>().AddScore(-deduction);
+			other.GetComponent<HealthStates>().AddHp(-1);
 			Destroy(gameObject);
 			Debug.Log("Hit player!");
 		}
@@ -20,8 +21,8 @@ public class EnemyProjectile : MonoBehaviour {
 	}
 
 	private bool CheckList(Collider2D collider) {
-		for(int i = 0; i < list.Length; i++) {
-			if(list[i].Equals(collider.tag)) {
+		for(int i = 0; i < tagList.Length; i++) {
+			if(tagList[i].Equals(collider.tag)) {
 				return true;
 			}
 		}

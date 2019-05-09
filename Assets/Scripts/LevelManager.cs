@@ -8,7 +8,7 @@ public class LevelManager : MonoBehaviour {
 	[SerializeField] private int maxLevels;
 
 	private void Awake() {
-		managers = FindObjectsOfType<EnemyManager>(); //apparently this shit is out of order, go figure.
+		managers = FindObjectsOfType<EnemyManager>(); //apparently out of order, go figure.
 		managers = SortArray(managers); //lets sort this trash
 		
 		currentLevel = 0; //init
@@ -16,6 +16,8 @@ public class LevelManager : MonoBehaviour {
 		maxLevels = managers.Length-1; //make sure we have an upperbounds for the for loop
 	}
 
+	///Changes current level from the managers to the next one, 
+	///activates and deactivates specific levels
 	public void AdvanceLevel() {
 		if (currentLevel < maxLevels) {
 			managers[currentLevel].SwitchFrom(); //Current level inactive
@@ -28,9 +30,11 @@ public class LevelManager : MonoBehaviour {
 		currentLevel++; //Set the next level ID as current 
 	}
 
+	///This is one giant mess, but the only consistent way I found of sorting the levels,
+	///as unity builds were completely fucked, thanks prefabs : ^)
 	EnemyManager[] SortArray(EnemyManager[] arr) {
 		EnemyManager level1 = null, level2 = null, level3 = null, level4 = null;
-
+		//Seriously, this method sucked, kill me
 		for(int i = 0; i < arr.Length; i++) {
 			switch(arr[i].levelId) {
 				case 1:

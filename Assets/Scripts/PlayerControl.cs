@@ -7,10 +7,11 @@ public class PlayerControl : MonoBehaviour {
 	[SerializeField] private float maxSpeed = 15f;          //Max Running Speed
 	[SerializeField] private float accelerationRate = 200f;	//Max Running Speed
 	[SerializeField] private float jumpForce = 500f;        //Jump Height
-	[SerializeField] private float dashDistance = 5f;		//Dash Length
+	[SerializeField] private float dashDistance = 5f;       //Dash Length
+	[SerializeField] private double dashCooldown = 2.5f;	//Dash cooldown in seconds
 	[SerializeField] private bool canDoubleJump = true;     //Is player able to double jump?
 	[SerializeField] private bool isGrounded = false;		//Whether or not the player is grounded.
-	[SerializeField] private bool canSlide = true;          //Is player able to slide?
+	//[SerializeField] private bool canSlide = true;          //Is player able to slide?
 	[SerializeField] private bool canDash = true;           //Is player able to dash?
 	[SerializeField] private LayerMask layerMask = 256;		// A mask to determine ground to the Controller
 
@@ -19,8 +20,7 @@ public class PlayerControl : MonoBehaviour {
 	private float movement = 0.0f;		//Horizontal axis pressed?
 	private bool jump = false;			//Jump button(s) pressed?
 	private bool dash = false;			//Dash button(s) pressed?
-	private bool slide = false;			//Slide button(s) pressed?
-	private double dashCooldown = 1.25;	//Dash cooldown in seconds
+	//private bool slide = false;			//Slide button(s) pressed?
 	private double timeStamp;			//Timestamp for dash cooldown
 	private bool lookingRight = true;	//Last direction faced
 
@@ -36,10 +36,13 @@ public class PlayerControl : MonoBehaviour {
 		//Checks a .01 unit area beneath the player for objects with the Ground layer
 		if (Physics2D.OverlapArea(new Vector2(transform.position.x - 0.55f, transform.position.y - 0.8f),
 			new Vector2(transform.position.x + 0.55f, transform.position.y - 0.81f), layerMask)) {
+			//Set all ready states to true
 			isGrounded = true;
 			canDoubleJump = true;
 			canDash = true;
-			anim.SetBool("Jumping", false);
+			//Set anim states to false
+			anim.SetBool("Jumping", false); 
+			anim.SetBool("Dashing", false);
 		}
 		else {
 			isGrounded = false;
@@ -83,7 +86,7 @@ public class PlayerControl : MonoBehaviour {
 		if (dash && canDash && timeStamp <= Time.time) { //If we pressed dash and we can dash and it's not on cooldown
 
 			timeStamp = Time.time + dashCooldown; //Set cooldown timestamp to current time
-
+			anim.SetBool("Dashing", true);
 			//Setup point to cast from and what direction we are going to RayCast from
 			Vector2 pointToCastFrom = new Vector2(transform.position.x + (lookingRight ? 0.5f : -0.5f), transform.position.y);
 			Vector2 direction = (lookingRight ? Vector2.right : Vector2.left);
@@ -108,6 +111,7 @@ public class PlayerControl : MonoBehaviour {
 		}
 	}
 
+	//Flips the sprite to make it look like the sprite has turned around
 	private void Flip() {
 		lookingRight = !lookingRight;
 
@@ -116,6 +120,7 @@ public class PlayerControl : MonoBehaviour {
 		transform.localScale = scale;
 	}
 
+	//Wallhold anim state, might be borked
 	private void OnCollisionEnter2D(Collision2D collision) {
 		if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Wall")) {
 			anim.SetBool("Holding", true);

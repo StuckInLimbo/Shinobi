@@ -3,9 +3,12 @@
 
 public class Inventory : MonoBehaviour {
 	[SerializeField] private ScoreKeeper score;
+	[SerializeField] private HealthStates health;
 
 	private void Start() {
-		score = GameObject.Find("ScoreObject").GetComponent<ScoreKeeper>();
+		GameObject scoreObj = GameObject.Find("ScoreObject");
+		score = scoreObj.GetComponent<ScoreKeeper>();
+		health = scoreObj.GetComponent<HealthStates>();
 	}
 
 	public void AddScore(int value) {

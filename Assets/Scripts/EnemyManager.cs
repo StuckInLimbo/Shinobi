@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Manages all child EnemyBehaviour objects via an array holding all 
+/// children of our gameObject
+/// </summary>
 public class EnemyManager : MonoBehaviour {
 	[SerializeField] public int levelId;
 	[SerializeField] public bool levelActive;
@@ -9,6 +13,7 @@ public class EnemyManager : MonoBehaviour {
 
 	void Start() {
 		//levelActive = false;
+		//Gets all children, adds them to the array
 		enemies = new GameObject[transform.childCount];
 		for (int i = 0; i < enemies.Length; i++) {
 			enemies[i] = transform.GetChild(i).gameObject;
@@ -16,6 +21,7 @@ public class EnemyManager : MonoBehaviour {
 		}
 	}
 
+	//Sets all enemies to an active state, and sets the active bool to true
 	public void SwitchTo() {
 		levelActive = true;
 		for (int i = 0; i < enemies.Length; i++) {
@@ -23,6 +29,7 @@ public class EnemyManager : MonoBehaviour {
 		}
 	}
 
+	//Sets all enemies to a sleep state, and sets the active bool to false
 	public void SwitchFrom() {
 		levelActive = false;
 		for (int i = 0; i < enemies.Length; i++) {

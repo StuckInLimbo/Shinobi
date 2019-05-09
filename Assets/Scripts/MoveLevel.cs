@@ -19,6 +19,7 @@ public class MoveLevel : MonoBehaviour {
 		if(collision.tag == "Player") {
 			Timer timer = collision.gameObject.GetComponent<Timer>();
 			Inventory inventory = collision.gameObject.GetComponent<Inventory>();
+			collision.gameObject.GetComponent<HealthStates>().AddHp(1);
 			inventory.AddScore(Mathf.RoundToInt(timer.GetSplitTime()) * -2);
 			manager.AdvanceLevel();
 			timer.ResetTime();

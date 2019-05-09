@@ -2,16 +2,16 @@
 using UnityEngine.SceneManagement;
 
 public class SceneSwitcher : MonoBehaviour {
-	public void GotoFirstScene() {
+	public void LoadFirstScene() {
 		SceneManager.LoadScene("Level1");
 	}
 
-	public void GotoTestScene() {
+	public void LoadDebugScene() {
 		Cursor.visible = false;
 		SceneManager.LoadScene("TestScene");
 	}
 
-	public void GotoMenuScene() {
+	public void LoadMainMenu() {
 		Cursor.visible = true;
 		SceneManager.LoadScene("MainMenu");
 	}
@@ -31,12 +31,11 @@ public class SceneSwitcher : MonoBehaviour {
 
 	private void OnTriggerEnter2D(Collider2D collision) {
 		if(collision.tag == "Player") {
-			Timer timer = collision.GetComponent<Timer>(); //Get Timer object
-			Inventory inventory = collision.GetComponent<Inventory>();
-			inventory.GetKeeper().Set(inventory.GetScore(), timer.GetTotalTime());
-			//LoadNextScene(); //Use when loading the next actual level
+			Timer timer = collision.GetComponent<Timer>(); //Get Timer comp
+			Inventory inventory = collision.GetComponent<Inventory>(); //Get inventory comp
+			inventory.GetKeeper().Set(inventory.GetScore(), timer.GetTotalTime()); //Send info to keeper comp
 			Destroy(collision.gameObject);
-			LoadGameOver();
+			LoadNextScene(); //Use when loading the next actual level
 		}
 	}
 }

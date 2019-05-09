@@ -8,7 +8,7 @@ public class Timer : MonoBehaviour {
 	private float totalTime;
 	private float timeOnLevel;
 
-    // Start is called before the first frame update
+    /// Start is called before the first frame update
     void Start() {
 		if (totalTimeObject)
 			return;
@@ -28,7 +28,7 @@ public class Timer : MonoBehaviour {
 		return timeOnLevel;
 	}
 
-    // Update is called once per frame
+    /// Update is called once per frame
     void Update() {
 		totalTime += Time.deltaTime;
 		timeOnLevel += Time.deltaTime;
@@ -39,7 +39,8 @@ public class Timer : MonoBehaviour {
 		splitTimeObject.GetComponent<Text>().text = "" + splitTimeText;
 		totalTimeObject.GetComponent<Text>().text = "" + totalTimeText;
     }
-
+	
+	/// Local method to format time, can format in total or split variations
 	private string Format(float time, bool isSplit) {
 		TimeSpan span = TimeSpan.FromSeconds(time);
 		string result = (isSplit ? "Split: " : "Total: ");
@@ -60,7 +61,7 @@ public class Timer : MonoBehaviour {
 		}
 		return result;
 	}
-
+	/// Public method to format time, can format in total or split variations
 	public static string FormatString(float time, bool isSplit) {
 		TimeSpan span = TimeSpan.FromSeconds(time);
 		string result = (isSplit ? "Split: " : "Total: ");
@@ -82,6 +83,7 @@ public class Timer : MonoBehaviour {
 		return result;
 	}
 
+	/// Sets split time to 0f
 	public void ResetTime() {
 		timeOnLevel = 0.0f;
 	}
