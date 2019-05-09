@@ -2,8 +2,11 @@
 using UnityEngine.SceneManagement;
 
 public class SceneSwitcher : MonoBehaviour {
+	private int GameOverIndex = 2;
 	public void LoadFirstScene() {
-		SceneManager.LoadScene("Level1");
+		Cursor.visible = false;
+		SceneManager.LoadScene("TestScene");
+		//SceneManager.LoadScene("Level1"); //until dev builds are done
 	}
 
 	public void LoadDebugScene() {
@@ -17,6 +20,9 @@ public class SceneSwitcher : MonoBehaviour {
 	}
 
 	public void LoadNextScene() {
+		if((SceneManager.GetActiveScene().buildIndex + 1) == GameOverIndex) {
+			Cursor.visible = true;
+		}
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 	}
 

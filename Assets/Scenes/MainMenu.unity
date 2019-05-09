@@ -372,7 +372,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 686144780}
-        m_MethodName: GotoFirstScene
+        m_MethodName: LoadFirstScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
