@@ -3,43 +3,33 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Timer : MonoBehaviour {
-	private GameObject totalTimeObject;
-	private GameObject splitTimeObject;
-	private float totalTime;
-	private float timeOnLevel;
+	[SerializeField] private float totalTime;
+	[SerializeField] private float timeOnLevel;
 
     /// Start is called before the first frame update
     void Start() {
-		if (totalTimeObject)
-			return;
-		else
-			totalTimeObject = GameObject.Find("Canvas/TimerText");
-		if (splitTimeObject)
-			return;
-		else
-			splitTimeObject = GameObject.Find("Canvas/SplitText");
+		GameObject score = GameObject.Find("ScoreObject");
+		if (score != null) {
+			totalTime = score.GetComponent<ScoreKeeper>().GetTime();
+		}
 	}
 
 	public float GetTotalTime() {
 		return totalTime;
 	}
 
+	public void SetTotalTime(float value) {
+		totalTime = value;
+	}
+
 	public float GetSplitTime() {
 		return timeOnLevel;
 	}
-
-    /// Update is called once per frame
-    void Update() {
+	void Update() {
 		totalTime += Time.deltaTime;
 		timeOnLevel += Time.deltaTime;
+	}
 
-		string totalTimeText = Format(totalTime, false);
-		string splitTimeText = Format(timeOnLevel, true);
-
-		splitTimeObject.GetComponent<Text>().text = "" + splitTimeText;
-		totalTimeObject.GetComponent<Text>().text = "" + totalTimeText;
-    }
-	
 	/// Local method to format time, can format in total or split variations
 	private string Format(float time, bool isSplit) {
 		TimeSpan span = TimeSpan.FromSeconds(time);
@@ -61,6 +51,7 @@ public class Timer : MonoBehaviour {
 		}
 		return result;
 	}
+
 	/// Public method to format time, can format in total or split variations
 	public static string FormatString(float time, bool isSplit) {
 		TimeSpan span = TimeSpan.FromSeconds(time);

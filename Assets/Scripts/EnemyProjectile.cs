@@ -20,6 +20,10 @@ public class EnemyProjectile : MonoBehaviour {
 		}
 	}
 
+	private void FixedUpdate() {
+		//transform.rotation.z //how to spin script?
+	}
+
 	private bool CheckList(Collider2D collider) {
 		for(int i = 0; i < tagList.Length; i++) {
 			if(tagList[i].Equals(collider.tag)) {

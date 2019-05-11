@@ -2,11 +2,11 @@
 using UnityEngine.SceneManagement;
 
 public class SceneSwitcher : MonoBehaviour {
-	private int GameOverIndex = 2;
+	[SerializeField] private int GameOverIndex = 4;
+
 	public void LoadFirstScene() {
 		Cursor.visible = false;
-		SceneManager.LoadScene("TestScene");
-		//SceneManager.LoadScene("Level1"); //until dev builds are done
+		SceneManager.LoadScene("Scene_1");
 	}
 
 	public void LoadDebugScene() {
@@ -39,8 +39,8 @@ public class SceneSwitcher : MonoBehaviour {
 		if(collision.tag == "Player") {
 			Timer timer = collision.GetComponent<Timer>(); //Get Timer comp
 			Inventory inventory = collision.GetComponent<Inventory>(); //Get inventory comp
-			inventory.GetKeeper().Set(inventory.GetScore(), timer.GetTotalTime()); //Send info to keeper comp
-			Destroy(collision.gameObject);
+			ScoreKeeper sk = inventory.GetKeeper();
+			sk.Set(inventory.GetScore(), timer.GetTotalTime()); //Send info to keeper comp
 			LoadNextScene(); //Use when loading the next actual level
 		}
 	}

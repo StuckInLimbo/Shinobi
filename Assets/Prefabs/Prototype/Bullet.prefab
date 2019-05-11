@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7328869118266869070}
   - component: {fileID: 3211586736861300363}
   - component: {fileID: 9164797588040292947}
+  - component: {fileID: 6682357813925111263}
   m_Layer: 2
   m_Name: Bullet
   m_TagString: Untagged
@@ -47,9 +48,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.03, y: 0.03}
   serializedVersion: 2
-  m_Radius: 0.09
+  m_Radius: 0.18
 --- !u!212 &7328869118266869070
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -136,3 +137,22 @@ MonoBehaviour:
   - Collectable
   - Enemy
   - Spawner
+--- !u!95 &6682357813925111263
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9164797588040292946}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9dbeccf29089e43429f39be194d91c4a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

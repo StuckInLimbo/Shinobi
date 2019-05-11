@@ -19,6 +19,7 @@ public class GameOver : MonoBehaviour {
 		float totalTime = sk.GetTime();
 		int score = sk.GetScore();
 		string timeText = Timer.FormatString(totalTime, false);
+		Destroy(keeper);
 		timeObject.GetComponent<Text>().text = timeText;
 		scoreObject.GetComponent<Text>().text = "Total Score: " + score;
 	}
