@@ -12,6 +12,7 @@ public class CollectableItem : MonoBehaviour {
 	private void OnTriggerEnter2D(Collider2D other) {
 		if (other.tag == "Player") {
 			inventory = other.GetComponent<Inventory>(); //Gets comp from Player
+			inventory.AddScore(value);
 			collectSound.Play();
 			Destroy(gameObject); //Removes self from the plane of existence
 		}
