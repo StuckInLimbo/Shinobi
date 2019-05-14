@@ -2,11 +2,11 @@
 
 public class EnemyProjectile : MonoBehaviour {
 	[SerializeField] private int deduction = 50;
-	[SerializeField] private string[] tagList = { "Collectable", "Enemy", "Spawner"};
+	[SerializeField] private string[] tagList = { "Collectable", "Enemy", "Spawner", "Projectile"};
 
 	private void OnTriggerEnter2D(Collider2D other) {
 		
-		if (CheckList(other) == true){
+		if (CheckList(other.tag) == true){
 			//do nothing
 		}
 		else if (other.tag == "Player") {
@@ -20,13 +20,9 @@ public class EnemyProjectile : MonoBehaviour {
 		}
 	}
 
-	private void FixedUpdate() {
-		//transform.rotation.z //how to spin script?
-	}
-
-	private bool CheckList(Collider2D collider) {
+	private bool CheckList(string tag) {
 		for(int i = 0; i < tagList.Length; i++) {
-			if(tagList[i].Equals(collider.tag)) {
+			if(tagList[i] == tag) {
 				return true;
 			}
 		}
