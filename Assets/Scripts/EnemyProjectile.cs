@@ -2,7 +2,7 @@
 
 public class EnemyProjectile : MonoBehaviour {
 	[SerializeField] private int deduction = 50;
-	[SerializeField] private string[] tagList = { "Collectable", "Enemy", "Spawner", "Projectile"};
+	[SerializeField] private string[] tagList = { "Collectable", "Enemy", "Spawner", "Projectile", "Hazard"};
 
 	private void OnTriggerEnter2D(Collider2D other) {
 		

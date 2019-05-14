@@ -24,7 +24,7 @@ public class EnemyBehaviour : MonoBehaviour {
 		if (horizontalShooting == false) {
 			yPostition = (verticalShootUp ? 0.5f : -0.5f);
 			xPosition = 0.0f;
-			yVelocity = (facingRight ? projectileSpeed : -projectileSpeed);
+			yVelocity = (verticalShootUp ? projectileSpeed : -projectileSpeed);
 			xVelocity = 0.0f;
 		}
 		else {
